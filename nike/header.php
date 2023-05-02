@@ -26,7 +26,7 @@
 ?>
 
 <header>
-        <div id="navabar-1">    
+        <div id="navabar-1 class-a">    
             <a href="index.php">
                 <img src="./assests/img/airjordan.png" class="logo" alt="loi">
             </a>
