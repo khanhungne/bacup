@@ -1,0 +1,36 @@
+
+.footer-box-1{
+    display: flex;
+    justify-content: space-around;
+    line-height: 20px
+}
+.footer-box-1 h4{
+    margin-bottom: 20px;
+    font-weight: 500;
+
+}
+.footer-box-1 p{
+    font-weight: 400;
+    color: #7c7b7b;
+}
+.footer-box-1{
+    padding: 60px;
+}
+footer {
+    /* background-color: black; */
+}
+.container ul li a{
+    text-decoration: none;
+}
+
+footer {
+    width: 100%;
+    background-color: blue;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+

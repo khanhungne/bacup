@@ -1,0 +1,16 @@
+.select-option{
+    padding: 15px;
+    font-weight: bold;
+    display: inline-block;
+    float: right;
+}
+.select-option #select{
+    width: 120px;
+    padding: 0 0 0 15px;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    color: #000;
+    background: transparent;
+    cursor: pointer;
+}
