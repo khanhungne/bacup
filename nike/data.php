@@ -10,4 +10,5 @@
         die("Connection failed: " . $conn->connect_error);
     }
     mysqli_select_db($conn, $database);
+
 ?> 
