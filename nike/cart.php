@@ -10,193 +10,102 @@
     <link rel="stylesheet" href="./assests/css/footer.css">
     <link rel="stylesheet" href="./assests/css/headerr.css">
     <link rel="stylesheet" href="./assests/fonts/fontawesome-free-6.3.0-web/css/all.min.css">
+    <link rel="stylesheet" href="./assests/css/cart.css">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 </head>
 
 <body>
-<?php include "header.php";
-include "data.php";
-    $productDetails = null;
-    $productImgs = [];
+<?php include_once "header.php";
+include_once "data.php";
 
-    $queryString = $_SERVER['QUERY_STRING']; // id=12
-    $queries = explode('=',$queryString); // ['id', '12']
-    $searchId = $queries[1];
-    $result = mysqli_query($conn, "SELECT * from tb_products where id = ".$searchId." ");
-    $resultImgs = mysqli_query($conn, "SELECT * from tb_images where product_id = ".$searchId." ");
-    
-    if(mysqli_num_rows($result) > 0){
-        // gắn vào biến
-        $productDetails = mysqli_fetch_assoc($result);
-    }
+if(isset($_GET['id'])){
+    $id = $_GET['id'];
+    unset($_SESSION['cart'][$id]);
+    header('Location: cart.php');
+    exit;
+}
 
-    if(mysqli_num_rows($resultImgs) > 0){
-        // gắn vào biến
-        $productImgs = mysqli_fetch_all($resultImgs);
-    }
-
-    if($_SERVER['REQUEST_METHOD'] == "POST"){
-        // var_dump($_SESSION['cart']);
-        // ($_SESSION['cart']=[]);
-
-        if (isset($searchId, $_POST['quantity']) && is_numeric($searchId) && is_numeric($_POST['quantity'])) {
-            $quantity = $_POST['quantity'];
-            $product_id = $searchId;
-
-            if ($product_id && $quantity > 0) {
-                // Product exists in database, now we can create/update the session variable for the cart
-                if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-                    if (array_key_exists($product_id, $_SESSION['cart'])) {
-                        // Product exists in cart so just update the quanity
-                        $_SESSION['cart'][$product_id]['quantity'] += $quantity;
-                    } else {
-                        // Product is not in cart so add it
-                        $_SESSION['cart'][$product_id] = [
-                            'id'=> $productDetails['id'],
-                            'name'=> $productDetails['title'],
-                            'price'=> $productDetails['price'],
-                            'image'=> $productDetails['image'],
-                            'quantity'=> $quantity,
-                        ];
-                    }
-                } else {
-                    // There are no products in cart, this will add the first product to cart
-                    $_SESSION['cart'] = [$product_id => [
-                        'id'=> $productDetails['id'],
-                        'name'=> $productDetails['title'],
-                        'price'=> $productDetails['price'],
-                        'image'=> $productDetails['image'],
-                        'quantity'=> $quantity,
-                    ]];
-                }
-                if(isset($_POST['buy'])){
-                    header("location:cart.php");
-                } else {
-                    header("Refresh:0");
+?>
+    <div class="cart">
+        <h3>Shopping Cart</h3>
+        <table >
+        <tr>
+            <td>Product</td>
+            <td>Image</td>
+            <td>Price</td>
+            <td>Quantity</td>
+            <td>Total</td>
+            <td></td>
+        </tr>
+        <?php
+        $items = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+        if(count($items)) {
+            foreach($items as $item) {
+                echo '<tr>
+                        <td>'.$item['name'].'</td>
+                        <td>'.($_SERVER['REQUEST_METHOD'] != "POST" ? '<img style="height:100px" src="'.$item['image'].'" alt="" />' : '').'</td>
+                        <td>'.number_format($item['price'], 0, '', ',').'đ</td>
+                        <td>'.$item['quantity'].'</td>
+                        <td>'.number_format((intval($item['price']) * intval($item['quantity'])), 0, '', ',').'đ</td>
+                        <td><form><input hidden type="text" name="id" value="'.$item['id'].'"><input type="submit" value="x" /></form></td>
+                    </tr>';
+            }
+        } else {
+            echo ' <tr>
+                <td class="no-data" colspan="6">You have no products added in your Shopping Cart</td>
+            </tr>';
+        }
+        ?>
+        </table>
+        <div class="subtotal-text">
+            <div>Subtotal</div>
+            <div>$<?php 
+            $subTotal = 0;
+            
+            if(isset($items) && count($items)) {
+                foreach($items as $item) {
+                    $subTotal += $item["price"] * $item['quantity'];
                 }
             }
-        }
-    }
-?>
-<!-- <pre><?php var_dump($productImgs) ?></pre> -->
-    <section class="product">
-        <div class="container">
-            <div class="content row">
-                <div class="content-left col-md-4 col-sm-9">
-                    <div class="content-img ">
-                        <img src="<?php echo $productImgs[0][2]?>" alt="">
-                        <img src="<?php echo $productImgs[2][2]?>" alt="">
-                    </div>
-                </div>  
-                <div class="content-left col-md-4 col-sm-9">
-                    <div class="content-img ">
-                        <img src="<?php echo $productImgs[1][2]?>" alt="">
-                        <img src="<?php echo $productImgs[3][2]?>" alt="">
-                    </div>
-                </div>
-            
-                <!-- p class="bursh_text">'. $product[1].'</p> -->
-                <div class="content-right col-md-3 col-sm-2">
-                    <div class="content-name">
-                        <h1><?php echo  $productDetails["title"]?></h1>
-                        <p>MSP <?php echo $productDetails["id"]?></p>
-                    </div>
-                    <div class="content-price">
-                        <p><?php echo number_format($productDetails["price"], 0, '', ',')?><sup>đ</sup></p>
-                    </div>
-                    <div class="content-size">
-                        <p style="font-weight: bold;">Size:</p>
-                        <div class="size">
-                            <span class="shoes-size">L</span>
-                        </div>
-                    </div>
-                    <form method="POST">
-                        <div class="quantity">
-                            <p style="font-weight: bold;">Quantity</p>
-                            <input type="number" name="quantity" min="0" value="1">
-                        </div>
-                        <div class="content-button">
-                            <button class="btn-product-add" type="submit"><i class="fas fa-shopping-cart icon-product"></i>Add the item</button class="btn-product">  
-                            <button type="submit" name="buy" class="btn-product"><i class="fas fa-shopping-cart icon-product"></i>Buy</button>
-                        </div>
-                    </form>
-                    <div class="content-icon">
-                        <div class="content-item">
-                            <i class="fas fa-phone-alt"></i>Hotline
-                        </div>
-                        <div class="content-item">
-                            <i class="far fa-comments"></i>Chat
-                        </div>
-                        <div class="content-item">
-                            <i class="far fa-envelope"></i>Mail
-                        </div>
-                    </div>
-                    <div class="content-QR">
-                        <img src="" alt="">
-                    </div>
-                    <div class="content-bottom">
-                        <div class="content-bottom-top">
-                            -
-                        </div>
-                        <div class="content-big">
-                            <div class="content-title row">
-                                <div class="content-title-item">
-                                    <p>Details</p>
-                                </div>
-                                <div class="content-title-item">
-                                    <p>Save</p>
-                                </div>
-                                <div class="content-title-item">
-                                    <p>Refer size</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            echo number_format($subTotal, 0, '', ',');
+            ?></div>
         </div>
-
-    </section>
-    <!-- "product-related"------------------- -->
-    <section class="product-related container">
-        <div class="product-related-title">
-            <p>Product Related</p>
-        </div>
-        <div class=" row product-content">
-            <div class="col-3">
-                <div class="product-related-item ">
-                    <img src="./assests/img/producthome/airjordanelevatehigh.webp" alt="">
-                    <h1>Air Jordan 1 Mid Low</h1>
-                    <p> 1.110.000<sup>đ</sup></p>
-                </div>
+        <form method="POST">
+            <div class="button-submit">
+                <button type="submit" class="btn btn-dark">Place Order</button>
             </div>
-            <div class="col-3">
-                <div class="product-related-item ">
-                    <img src="./assests/img/producthome/airjordan1sewhite.webp" alt="">
-                    <h1>Air Jordan 1 Mid Low</h1>
-                    <p> 2.743.000<sup>đ</sup></p>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="product-related-item ">
-                    <img src="./assests/img/producthome/airjordanelevatehigh.webp" alt="">
-                    <h1>Air Jordan 1 Mid Low</h1>
-                    <p> 1.110.000<sup>đ</sup></p>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="product-related-item ">
-                    <img src="./assests/img/producthome/airjordanelevatehigh.webp" alt="">
-                    <h1>Air Jordan 1 Mid Low</h1>
-                    <p> 1.110.000<sup>đ</sup></p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </form>
+        <?php 
+            if($_SERVER['REQUEST_METHOD'] == "POST"){
+                if(isset($_POST['reload'])) {
+                    header('Location: notice.php');exit;
+                }
 
-
-
-
+                if(isset($_SESSION['user'])){
+                    $user_id = $_SESSION['user']['id'];
+                } else{
+                    $user_id = session_id();
+                }
+                if(count($items)){   
+                    $result = mysqli_query($conn, "INSERT INTO tb_orders (user_id, sub_total)
+                    VALUES ('$user_id', '$subTotal') ;");
+                    if($result == 1) {
+                        $order_id = mysqli_insert_id($conn);
+                        foreach($items as $item){
+                            $quantity = $item["quantity"];
+                            $product_id = $item["id"];
+                            $total = (int)$item["price"] * (int)$item["quantity"];
+                            mysqli_query($conn, "INSERT INTO tb_order_details (order_id, product_id, quantity, total)
+                            VALUES ('$order_id', '$product_id', '$quantity', '$total');");
+                        }
+                        $_SESSION['cart'] = [];
+                        header('Location: notice.php');exit;
+                    }
+                }
+            }
+        ?>
+    </div>
 
     <footer class="text-center text-lg-start mt-5" style="background-color: #000;">
         <!-- Grid container -->

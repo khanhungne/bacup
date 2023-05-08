@@ -51,7 +51,18 @@
                </div>
                <div class="product_section_2 layout_padding">
                     <div class="row">
+                    
                         <?php 
+                        include "data.php"; // luôn include filee keét nối
+                        global $conn;
+                        $products = [];
+
+                        $result = mysqli_query($conn, "SELECT * from tb_products  where title like '%".$searchTitle."%'  ORDER BY id desc limit 4");
+                    
+                        if(mysqli_num_rows($result) > 0){
+                            // gắn vào biến
+                            $products = mysqli_fetch_all($result);
+                        }
                         // foreachchỗnày, hiển thị ra sản phẩm trong DB.
                             foreach($products as $product) {
                                 // print_r($product);
@@ -61,7 +72,7 @@
                                         <img src="'. $product[2].'" class="image_1">
                                         <p class="bursh_text">'. $product[1].'</p>
                                         <p class="lorem_text">'. $product[4].'</p>
-                                        <p class="bursh_text">'. $product[3].'đ</p>
+                                        <p class="bursh_text"> '.number_format($product[3], 0, "", ",").'<sup>đ</sup></p>
                                     </div>
                                 </a>
                             </div>';

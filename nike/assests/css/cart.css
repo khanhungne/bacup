@@ -1,0 +1,43 @@
+.cart {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.cart h3 {
+    padding: 30px 50px;
+}
+
+.cart table {
+    width: 70%;
+}
+
+.cart table td {
+    border-bottom: 1px solid gray;
+    padding: 10px 20px;
+}
+
+.no-data {
+    text-align: center;
+}
+
+.subtotal-text {
+    display: flex;
+    justify-content: flex-end;
+}
+.subtotal-text div {
+    padding: 20px 0 20px 20px;
+}
+
+.subtotal-text, .button-submit {
+    text-align: right;
+}
+
+.button-submit button {
+    text-align: center;
+    transition: 0.5s;
+}
+
+.button-submit button:hover {
+    background: grey;
+}

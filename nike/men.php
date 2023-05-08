@@ -1,34 +1,4 @@
-<?php
-    include "data.php"; // luôn include filee keét nối
-    global $conn;
-    
-    $error = '';
-    $searchTitle = '';
-    $page = 1;
-    $products = [];
-    // query - lấy 3 sản phẩm mới nhất
-    $queryString = $_SERVER['QUERY_STRING']; // a=1&b=2
-    $queries = explode('&',$queryString); // ['a=1', 'b=2']
-    foreach($queries as $que) {
-        // 'a=1'
-        $q = explode('=', $que); // ['a','1']
-        if($q[0] == 'search') {
-            $searchTitle = $q[1];
-        }
-        if($q[0] == 'page') {
-            // kieemrr tra có phải là số hay không
-            if(is_numeric($q[1])) $page = $q[1];
-        }
-    }
 
-    $result = mysqli_query($conn, "SELECT * from tb_products where title like '%".$searchTitle."%'  ORDER BY id desc limit ". 5*$page);
-    // $result = mysqli_query($conn, "SELECT * from tb_products where title like '%".$searchTitle."%'  ORDER BY id desc limit 5 OFFSET ". 5*($page - 1));
-  
-    if(mysqli_num_rows($result) > 0){
-        // gắn vào biến
-        $products = mysqli_fetch_all($result);
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,15 +51,42 @@
            <div class="product_section_2 layout_padding">
                 <div class="row">
                     <?php 
+                    include "data.php"; // luôn include filee keét nối
+                    global $conn;
+                    
+                    $error = '';
+                    $page = 1;
+                    $products = [];
+                    // query - lấy 3 sản phẩm mới nhất
+                    $queryString = $_SERVER['QUERY_STRING']; // a=1&b=2
+                    $queries = explode('&',$queryString); // ['a=1', 'b=2']
+                    foreach($queries as $que) {
+                        // 'a=1'
+                        $q = explode('=', $que); // ['a','1']
+                        if($q[0] == 'page') {
+                            // kieemrr tra có phải là số hay không
+                            if(is_numeric($q[1])) $page = $q[1];
+                        }
+                    }
+                
+                    $result = mysqli_query($conn, "SELECT * from tb_products where title like '%".$searchTitle."%'  ORDER BY id desc limit ". 5*$page);
+                    // $result = mysqli_query($conn, "SELECT * from tb_products where title like '%".$searchTitle."%'  ORDER BY id desc limit 5 OFFSET ". 5*($page - 1));
+                  
+                    if(mysqli_num_rows($result) > 0){
+                        // gắn vào biến
+                        $products = mysqli_fetch_all($result);
+                    }
+                
                         foreach($products as $product) {
                             // print_r($product);
                             echo '<div class="col-lg-3 col-sm-6">
-                            <a href="" class="product-card">
+                            <a href="product.php?id='. $product[0].'" class="product-card">
                                 <div class="product_box">
-                                    <img src="'.$product[2].'" class="image_1">
-                                    <p class="bursh_text">'.$product[1].'</p>
-                                    <p class="lorem_text">'.$product[4].'</p>
-                                    <p class="bursh_text">'.$product[3].' đ</p>
+                                    <img src="'. $product[2].'" class="image_1">
+                                    <p class="bursh_text">'. $product[1].'</p>
+                                    <p class="lorem_text">'. $product[4].'</p>
+                                    <p class="bursh_text"> '.number_format($product[3], 0, "", ",").'<sup>đ</sup></p>
+
                                 </div>
                             </a>
                         </div>';

@@ -1,11 +1,7 @@
 <?php
-    include "data.php"; // luôn include filee keét nối
     session_start();
 
-    global $conn;
-    $error = '';
     $searchTitle = '';
-    $products = [];
     // query - lấy 3 sản phẩm mới nhất
     $queryString = $_SERVER['QUERY_STRING']; // a=1&b=2
     $queries = explode('&',$queryString); // ['a=1', 'b=2']
@@ -16,17 +12,10 @@
             $searchTitle = $q[1];
         }
     }
-
-    $result = mysqli_query($conn, "SELECT * from tb_products  where title like '%".$searchTitle."%'  ORDER BY id desc limit 4");
-  
-    if(mysqli_num_rows($result) > 0){
-        // gắn vào biến
-        $products = mysqli_fetch_all($result);
-    }
 ?>
 
 <header>
-        <div id="navabar-1 class-a">    
+        <div id="navabar-1">    
             <a href="index.php">
                 <img src="./assests/img/airjordan.png" class="logo" alt="loi">
             </a>
@@ -57,14 +46,16 @@
                   <li><a href="women.php">Women</a></li>
                   <li><a href="kids.php">Kids</a></li>
                 </ul>
-                <form action="index.php">
+                <form>
                   <div class="search-icon">
                     <i class="fas fa-search"></i>
                   </div>
-                  <input type="text" value="<?php echo $searchTitle; ?>" name="search" id="" class="search" placeholder="Search..."/>
-                  <button class="nav-btn">
-                    <i class="fas fa-cart-plus"></i>
-                  </button>
+                  <input style="border:1px solid black; border-radius:10px" type="text" value="<?php echo $searchTitle; ?>" name="search" id="" class="search" placeholder="Search..."/>
+                  <a href="cart.php" >
+                    <button type="button" class="nav-btn">
+                      <i class="fas fa-cart-plus"><?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0?></i>
+                    </button>
+                  </a>
                 </form>
               </div>
             </div>
