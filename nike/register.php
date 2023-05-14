@@ -68,7 +68,7 @@
                     $result = mysqli_query($conn, "INSERT INTO tb_user (name, address, email, user, pass, role)
                      VALUES ('$name', 'hanoi', '$email', '$user', '$pass', 0);");
                     if($result == 1 ){
-                        header('Location: login.php');
+                        echo("<script>location.href = '/login.php';</script>");
                     }
                 }
                 // if(mysqli_num_rows($result) == 1){

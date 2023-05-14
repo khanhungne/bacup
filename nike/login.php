@@ -19,7 +19,7 @@
                 $user = mysqli_fetch_assoc($result);
                 $_SESSION['user'] = $user;
                 $_SESSION['name'] = $user['name'];
-                header('Location: index.php');
+                echo("<script>location.href = '/index.php';</script>");
                 exit();
             } else {
                 $error = "Invalid";
