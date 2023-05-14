@@ -1,4 +1,4 @@
-<?php include_once "header.php"; ?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +13,7 @@
     <title>Kid/title>
 </head>
 <body>
-
+<?php include_once "header.php"; ?>
     
 
 

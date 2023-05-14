@@ -1,4 +1,4 @@
-<?php include "header.php"; ?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,16 +15,12 @@
 </head>
 
 <body>
-<?php
-include "data.php";
+<?php include "data.php";
     $productDetails = null;
     $productImgs = [];
 
-    $queryString = $_SERVER['QUERY_STRING']; // id=12
-    $queries = explode('=',$queryString); // ['id', '12']
-    $searchId = $queries[1];
-    $result = mysqli_query($conn, "SELECT * from tb_products where id = ".$searchId." ");
-    $resultImgs = mysqli_query($conn, "SELECT * from tb_images where product_id = ".$searchId." ");
+    $result = mysqli_query($conn, "SELECT * from tb_products where id = ".$_GET["id"]." ");
+    $resultImgs = mysqli_query($conn, "SELECT * from tb_images where product_id = ".$_GET["id"]." ");
     
     if(mysqli_num_rows($result) > 0){
         // gắn vào biến
@@ -33,16 +29,16 @@ include "data.php";
 
     if(mysqli_num_rows($resultImgs) > 0){
         // gắn vào biến
-        $productImgs = mysqli_fetch_all($resultImgs);
+        $productImgs = []; while($r = mysqli_fetch_assoc($resultImgs)) $productImgs[] = $r;
     }
 
     if($_SERVER['REQUEST_METHOD'] == "POST"){
         // var_dump($_SESSION['cart']);
         // ($_SESSION['cart']=[]);
 
-        if (isset($searchId, $_POST['quantity']) && is_numeric($searchId) && is_numeric($_POST['quantity'])) {
+        if (isset($_GET["id"], $_POST['quantity']) && is_numeric($_GET["id"]) && is_numeric($_POST['quantity'])) {
             $quantity = $_POST['quantity'];
-            $product_id = $searchId;
+            $product_id = $_GET["id"];
 
             if ($product_id && $quantity > 0) {
                 // Product exists in database, now we can create/update the session variable for the cart
@@ -71,32 +67,32 @@ include "data.php";
                     ]];
                 }
                 if(isset($_POST['buy'])){
-                    header("location:cart.php");
+                    echo("<script>location.href = '/cart.php';</script>");
                 } else {
-                    header("Refresh:0");
+                    echo("<script>location.href = window.location.href;</script>");
                 }
             }
         }
     }
 ?>
-<!-- <pre><?php var_dump($productImgs) ?></pre> -->
+<?php include "header.php" ?>
     <section class="product">
         <div class="container">
             <div class="content row">
                 <div class="content-left col-md-4 col-sm-9">
                     <div class="content-img ">
-                        <img src="<?php echo $productImgs[0][2]?>" alt="">
-                        <img src="<?php echo $productImgs[2][2]?>" alt="">
+                        <img src="<?php echo $productImgs[0]["image"]?>" alt="">
+                        <img src="<?php echo $productImgs[2]["image"]?>" alt="">
                     </div>
                 </div>  
                 <div class="content-left col-md-4 col-sm-9">
                     <div class="content-img ">
-                        <img src="<?php echo $productImgs[1][2]?>" alt="">
-                        <img src="<?php echo $productImgs[3][2]?>" alt="">
+                        <img src="<?php echo $productImgs[1]["image"]?>" alt="">
+                        <img src="<?php echo $productImgs[3]["image"]?>" alt="">
                     </div>
                 </div>
             
-                <!-- p class="bursh_text">'. $product[1].'</p> -->
+                <!-- p class="bursh_text">'. $product["title"].'</p> -->
                 <div class="content-right col-md-3 col-sm-2">
                     <div class="content-name">
                         <h1><?php echo  $productDetails["title"]?></h1>

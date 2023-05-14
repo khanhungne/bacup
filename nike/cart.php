@@ -1,4 +1,4 @@
-<?php include_once "header.php"; ?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,12 +18,12 @@
 
 <body>
 <?php
-include_once "data.php";
+include_once "data.php"; include_once "header.php";
 
-if(isset($_GET['id'])){
-    $id = $_GET['id'];
+if(isset($_POST['id'])){
+    $id = $_POST['id'];
     unset($_SESSION['cart'][$id]);
-    header('Location: cart.php');
+    echo("<script>location.href = window.location.href;</script>");
     exit;
 }
 
@@ -49,7 +49,7 @@ if(isset($_GET['id'])){
                         <td>'.number_format($item['price'], 0, '', ',').'đ</td>
                         <td>'.$item['quantity'].'</td>
                         <td>'.number_format((intval($item['price']) * intval($item['quantity'])), 0, '', ',').'đ</td>
-                        <td><form><input hidden type="text" name="id" value="'.$item['id'].'"><input type="submit" value="x" /></form></td>
+                        <td><form method="POST"><input hidden type="text" name="id" value="'.$item['id'].'"><input type="submit" value="x" /></form></td>
                     </tr>';
             }
         } else {
@@ -80,7 +80,7 @@ if(isset($_GET['id'])){
         <?php 
             if($_SERVER['REQUEST_METHOD'] == "POST"){
                 if(isset($_POST['reload'])) {
-                    header('Location: notice.php');exit;
+                    echo("<script>location.href = '/notice.php';</script>");exit;
                 }
 
                 if(isset($_SESSION['user'])){
@@ -101,7 +101,7 @@ if(isset($_GET['id'])){
                             VALUES ('$order_id', '$product_id', '$quantity', '$total');");
                         }
                         $_SESSION['cart'] = [];
-                        header('Location: notice.php');exit;
+                        echo("<script>location.href = '/notice.php';</script>");exit;
                     }
                 }
             }

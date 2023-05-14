@@ -1,12 +1,6 @@
 <?php
-    include "data.php";
-    global $conn;
     session_start();
-    // ob_start();
-    // if (isset($_SESSION['user'])) {
-    //     header('Location: index.php');
-    //     exit();
-    // }
+    include "data.php";
     $error = '';
     $user = '';
     $pass = '';
@@ -40,33 +34,7 @@
 
     }
 
-
-
-
     $error = '';
-    $searchTitle = '';
-    $products = [];
-    // query - lấy 3 sản phẩm mới nhất
-    $queryString = $_SERVER['QUERY_STRING']; // a=1&b=2
-    $queries = explode('&',$queryString); // ['a=1', 'b=2']
-    foreach($queries as $que) {
-        // 'a=1'
-        $q = explode('=', $que); // ['a','1']
-        if($q[0] == 'search') {
-            $searchTitle = $q[1];
-        }
-    }
-
-    $result = mysqli_query($conn, "SELECT * from tb_products where title like '%".$searchTitle."%'  ORDER BY id desc limit 4");
-  
-    if(mysqli_num_rows($result) > 0){
-        // gắn vào biến
-        $products = mysqli_fetch_all($result);
-    }
-
-
-
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -92,7 +60,7 @@
                 <a href="">Help |</a>
                 <a href="https://www.facebook.com/khanhungzy/">Join Us |</a>
                 <?php
-                    if(isset($_SESSION['name'])){
+                    if(isset($_SESSION['name']) && $_SESSION['name']){
                         echo "<a href='logout.php'>Login</a>";
                     } else {
                         echo "<a href='login.php'>Login</a>";
@@ -119,7 +87,7 @@
                   <div class="search-icon">
                     <i class="fas fa-search"></i>
                   </div>
-                  <input type="text" value="<?php echo $searchTitle; ?>" name="search" id="" class="search" placeholder="Search..."/>
+                  <input type="text" value="<?php echo ($_GET['search'] ?? "") ?>" name="search" id="" class="search" placeholder="Search..."/>
                   <button class="nav-btn">
                     <i class="fas fa-cart-plus"></i>
                   </button>

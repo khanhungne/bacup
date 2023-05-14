@@ -1,4 +1,4 @@
-<?php include_once "header.php"; ?>
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="./assests/css/footer.css"> 
 </head>
 <body>
-
+<?php include_once "header.php"; ?>
     <!-- Container -->
     <div class="container">
         <!-- add video -->
@@ -57,22 +57,22 @@
                         global $conn;
                         $products = [];
 
-                        $result = mysqli_query($conn, "SELECT * from tb_products  where title like '%".$searchTitle."%'  ORDER BY id desc limit 4");
+                        $result = mysqli_query($conn, "SELECT * from tb_products  where title like '%".($_GET['search'] ?? "")."%'  ORDER BY id desc limit 4");
                     
                         if(mysqli_num_rows($result) > 0){
                             // gắn vào biến
-                            $products = mysqli_fetch_all($result);
+                            $products = []; while($r = mysqli_fetch_assoc($result)) $products[] = $r;
                         }
                         // foreachchỗnày, hiển thị ra sản phẩm trong DB.
                             foreach($products as $product) {
                                 // print_r($product);
                                 echo '<div class="col-lg-3 col-sm-6">
-                                <a href="product.php?id='. $product[0].'" class="product-card">
+                                <a href="product.php?id='. $product["id"].'" class="product-card">
                                     <div class="product_box">
-                                        <img src="'. $product[2].'" class="image_1">
-                                        <p class="bursh_text">'. $product[1].'</p>
-                                        <p class="lorem_text">'. $product[4].'</p>
-                                        <p class="bursh_text"> '.number_format($product[3], 0, "", ",").'<sup>đ</sup></p>
+                                        <img src="'. $product["image"].'" class="image_1">
+                                        <p class="bursh_text">'. $product["title"].'</p>
+                                        <p class="lorem_text">'. $product["category"].'</p>
+                                        <p class="bursh_text"> '.number_format($product["price"], 0, "", ",").'<sup>đ</sup></p>
                                     </div>
                                 </a>
                             </div>';

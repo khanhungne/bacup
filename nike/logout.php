@@ -1,9 +1,9 @@
 <?php
     session_start();
     session_destroy();
-    $_SESSION['error'] = "";
-    $_SESSION['user'] = "";
-    $_SESSION['name'] = "";
+    $_SESSION['error'] =null;
+    $_SESSION['user'] =null;
+    $_SESSION['name'] =null;
 ?>
 <!DOCTYPE html>
 <html lang="en">

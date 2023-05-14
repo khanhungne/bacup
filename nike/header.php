@@ -1,19 +1,3 @@
-<?php
-    session_start();
-
-    $searchTitle = '';
-    // query - lấy 3 sản phẩm mới nhất
-    $queryString = $_SERVER['QUERY_STRING'] ?? ""; // a=1&b=2
-    $queries = explode('&',$queryString); // ['a=1', 'b=2']
-    foreach($queries as $que) {
-        // 'a=1'
-        $q = explode('=', $que); // ['a','1']
-        if($q[0] == 'search') {
-            $searchTitle = $q[1];
-        }
-    }
-?>
-
 <header>
         <div id="navabar-1">    
             <a href="index.php">
@@ -28,7 +12,6 @@
                     } else {
                         echo "<a href='login.php'>Login</a>";
                     }
-
                 ?>
                 <!-- </p> -->
             </div>
@@ -50,7 +33,7 @@
                   <div class="search-icon">
                     <i class="fas fa-search"></i>
                   </div>
-                  <input style="border:1px solid black; border-radius:10px" type="text" value="<?php echo $searchTitle; ?>" name="search" id="" class="search" placeholder="Search..."/>
+                  <input style="border:1px solid black; border-radius:10px" type="text" value="<?php echo $_GET['search'] ?? ""; ?>" name="search" id="" class="search" placeholder="Search..."/>
                   <a href="cart.php" >
                     <button type="button" class="nav-btn">
                       <i class="fas fa-cart-plus"><?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0?></i>
