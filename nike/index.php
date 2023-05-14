@@ -1,3 +1,4 @@
+<?php include_once "header.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +13,6 @@
     <link rel="stylesheet" href="./assests/css/footer.css"> 
 </head>
 <body>
-    <?php include "header.php"; ?>
 
     <!-- Container -->
     <div class="container">

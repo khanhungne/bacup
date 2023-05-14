@@ -1,3 +1,4 @@
+<?php include "header.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +15,7 @@
 </head>
 
 <body>
-<?php include "header.php";
+<?php
 include "data.php";
     $productDetails = null;
     $productImgs = [];

@@ -2,7 +2,7 @@
     $servername = "localhost";
     $database = "shopnike";
     $username = "root";
-    $password = "";
+    $password = "password";
 
     global $conn;
     $conn = mysqli_connect($servername, $username, $password, $database);

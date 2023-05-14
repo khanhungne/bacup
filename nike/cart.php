@@ -1,3 +1,4 @@
+<?php include_once "header.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +17,7 @@
 </head>
 
 <body>
-<?php include_once "header.php";
+<?php
 include_once "data.php";
 
 if(isset($_GET['id'])){

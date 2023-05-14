@@ -3,7 +3,7 @@
 
     $searchTitle = '';
     // query - lấy 3 sản phẩm mới nhất
-    $queryString = $_SERVER['QUERY_STRING']; // a=1&b=2
+    $queryString = $_SERVER['QUERY_STRING'] ?? ""; // a=1&b=2
     $queries = explode('&',$queryString); // ['a=1', 'b=2']
     foreach($queries as $que) {
         // 'a=1'

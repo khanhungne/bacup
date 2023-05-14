@@ -1,4 +1,5 @@
 
+<?php include_once "header.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,6 @@
     <title>Men</title>
 </head>
 <body>
-<?php include "header.php"; ?>
 
     <div class="product_section layout_padding mt-3">
         <div class="container">
